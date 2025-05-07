@@ -1,0 +1,33 @@
+name: CI Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate Shell Scripts
+        run: |
+          # Check script formatting and syntax
+          sudo apt-get install -y shellcheck
+          find scripts/ -type f -name "*.sh" | xargs shellcheck
+
+      - name: Verify .env.example
+        run: |
+          # Ensure .env.example contains all required vars
+          grep -q "DOMAIN=" configs/.env.example || exit 1
+          grep -q "EMAIL=" configs/.env.example || exit 1
+          grep -q "SEMAPHORE_ADMIN_" configs/.env.example || exit 1
+
+      - name: Dry-Run Test
+        run: |
+          # Test script execution (dry-run mode)
+          chmod +x scripts/install.sh
+          ./scripts/install.sh --dry-run
