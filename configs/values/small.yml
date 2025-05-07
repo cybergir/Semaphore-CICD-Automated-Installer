@@ -1,0 +1,23 @@
+# Optimized for 2GB RAM servers
+replicaCount: 1
+resources:
+  requests:
+    cpu: "500m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1024Mi"
+
+redis:
+  enabled: true
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+
+postgresql:
+  enabled: true
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
